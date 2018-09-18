@@ -48,15 +48,19 @@ class Hero:
     self.kills = 0
 
     def defend(self):
+        """
+        This method should run the defend method on each piece of armor and calculate the total defense.
+        If the hero's health is 0, the hero is out of play and should return 0 defense points.
+        """
 
     def take_damage(self, damage_amt):
+        pass
 
     def add_kill(self, num_kills):
+        pass
 
 
-class Weapon(Abilitiy):
-    def __init__(self, name, attack_strength):
-        super().__init__(name, attack_strength)
+class Weapon(Ability):
 
     def attack(self):
         """
@@ -71,7 +75,7 @@ class Weapon(Abilitiy):
 
 
 class Team:
-    def init(self, team_name):
+    def __init__(self, team_name):
         """Instantiate resources."""
         self.name = team_name
         self.heroes = list()
@@ -85,34 +89,40 @@ class Team:
         Remove hero from heroes list.
         If Hero isn't found return 0.
         """
-        self.heroes.remove(name)
-        if name not in self.heroes:
-            return 0
+        for hero in self.heroes:
+            if name == hero.name:
+                self.heroes.remove(hero)
+        return 0
 
     def find_hero(self, name):
         """
         Find and return hero from heroes list.
         If Hero isn't found return 0.
         """
-        if name in self.heroes:
-            return name
-        elif name not in self.heroes:
-            return 0
+        for hero in self.heroes:
+            if name == hero.name:
+                return hero
+        return 0
 
     def view_all_heroes(self):
         """Print out all heroes to the console."""
         for hero in self.heroes:
-            print(hero)
+            print(hero.name)
 
     def defend(self, damage_amt):
+        pass
 
     def deal_damage(self, damage):
+        pass
 
     def revive_heroes(self, health=100):
+        pass
 
     def stats(self):
+        pass
 
     def update_kills(self):
+        pass
 
 
 class Armor:
@@ -127,16 +137,17 @@ class Armor:
         initialized defend strength.
         """
         random_defend_value = random.randint(0, self.defense)
+        return random_defend_value
 
 
-hero = Hero("Wonder Woman")
-print(hero.attack())
-ability = Ability("Divine Speed", 300)
-hero.add_ability(ability)
-print(hero.attack())
-new_ability = Ability("Super Human Strength", 800)
-hero.add_ability(new_ability)
-print(hero.attack())
+if __name__ == "__main__":
+    # If you run this file from the terminal this block is exectured
 
-# if __name__ == "__main__":
-#     # If you run this file from the terminal this block is exectured
+    hero = Hero("Wonder Woman")
+    print(hero.attack())
+    ability = Ability("Divine Speed", 300)
+    hero.add_ability(ability)
+    print(hero.attack())
+    new_ability = Ability("Super Human Strength", 800)
+    hero.add_ability(new_ability)
+    print(hero.attack())
