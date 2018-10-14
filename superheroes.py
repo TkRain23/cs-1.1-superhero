@@ -206,10 +206,9 @@ class Team:
         This data must be output to the terminal.
         """
 
-        kill_death_ratio = 0
         for hero in self.heroes:
-            kill_death_ratio = hero.kills // hero.deaths
-            print(kill_death_ratio)
+            print("{0} Stats - Kills: {1} | Deaths: {2}".format(hero.name, hero.kills, hero.deaths))
+
 
     # def update_kills(self):
     #     """
@@ -219,6 +218,15 @@ class Team:
     #     for hero in self.heroes:
     #
     #         hero.add_kill()
+
+    def heroes_are_alive(self):
+        """
+        This method returns true if there are still heroes alive.
+        """
+        for hero in self.heroes:
+            if hero.health <= 0:
+                return False
+        return True
 
 
 class Armor:
@@ -244,33 +252,90 @@ class Arena:
         self.team_one = team_one
         self.team_two = team_two
 
+    def add_new_hero(self, team):
+        hero_name = input("Enter Hero Name: ")
+        new_hero = Hero(hero_name)
+        team.add_hero(new_hero)
+        return new_hero
+
+    def add_new_ability(self, hero):
+        user_incomplete = True
+        while user_incomplete:
+            ability_name = input("Enter Ability Name: ")
+            ability_power = input("Enter Ability Power: ")
+            new_ability = Ability(ability_name, int(ability_power))
+            hero.add_ability(new_ability)
+
+            add_more_ability = input('Add another Ability (Yes or No): ')
+            if add_more_ability.upper() == 'NO':
+                user_incomplete = False
+
+
     def build_team_one(self):
         """
         This method should allow a user to build team one.
         """
-        print("Begin Building Team One")
-        hero_name = input("Enter Hero's Name: ")
-        armor = input("Enter armor item: ")
-        ability = input("Enter ability name" )
-        self.team_one.add_hero(hero_name, )
+        user_incomplete = True
+        while user_incomplete:
+            hero = self.add_new_hero(self.team_one)
+            self.add_new_ability(hero)
+
+            is_user_complete = input("Add another Hero? (Enter Yes or No): ")
+            if is_user_complete.upper() == "NO":
+                user_incomplete = False
 
 
     def build_team_two(self):
         """
         This method should allow user to build team two.
         """
+        user_incomplete = True
+        while user_incomplete:
+            hero = self.add_new_hero(self.team_two)
+            self.add_new_ability(hero)
+
+            is_user_complete = input("Add another Hero? (Enter Yes or No): ")
+            if is_user_complete.upper() == "NO":
+                user_incomplete = False
+            elif user_incomplete.upper() != "YES":
+                is_user_complete = input("Add another Hero? (Enter Yes or No): ")
 
     def team_battle(self):
         """
         This method should continue to battle teams until
         one or both teams are dead.
         """
+        battle_in_progress = True
+        battle_victor = 0
+
+        while battle_in_progress:
+            attack_turn = random.randint(0,1)
+
+            if attack_turn == 0:
+                self.team_one.attack(self.team_two)
+                battle_in_progress = self.team_two.heroes_are_alive()
+                if battle_in_progress == False:
+                    battle_victor = 0
+            elif attack_turn == 1:
+                self.team_two.attack(self.team_one)
+                battle_in_progress = self.team_one.heroes_are_alive()
+                if battle_in_progress == False:
+                    battle_victor = 1
+
+        if battle_victor == 0:
+            print('The Jedi win!')
+        elif battle_victor == 1:
+            print('The Sith win!')
 
     def show_stats(self):
         """
         This method should print out the battle statistics
         including each heroes kill/death ratio.
         """
+        print("Team One:")
+        self.team_one.stats()
+        print("Team Two:")
+        self.team_two.stats()
 
 
 if __name__ == "__main__":
